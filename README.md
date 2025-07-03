@@ -2,6 +2,12 @@ ADBueno: Your New Favorite ADB Library for C#
 
 ADBueno is a powerful and comprehensive C# library designed to simplify your interactions with Android Debug Bridge (ADB). Whether you're a developer, tester, or automation engineer, ADBueno provides a robust and easy-to-use set of functionalities to streamline your Android device management and testing workflows.
 
+📺 Development Journey
+
+Want to see how ADBueno came to life? Check out the development process on my YouTube channel:
+[Watch the development series here!]([https://www.youtube.com/watch?v=YOUR_YOUTUBE_VIDEO_ID](https://youtu.be/Fawe9lNzrJ4))
+
+
 ✨ Features
 ADBueno empowers you with a wide array of ADB functionalities, including:
 
