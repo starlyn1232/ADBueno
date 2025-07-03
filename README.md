@@ -55,40 +55,41 @@ Basic Usage
 
 Here's a quick example to get you started:
 
-C#
-
-using ADBueno;
-using System;
-
-internal class Program
-{
-    static void Main(string[] args)
+    C#
+    
+    using ADBueno;
+    using System;
+    
+    internal class Program
     {
-        // Detect devices
-        var devices = ADB.DetectDevices();
-        int count = devices.Count;
-
-        for (int i = 0; i < count; i++)
+        static void Main(string[] args)
         {
-            Console.WriteLine($"Current device: {devices[i].SerialNumber}");
+            // Detect devices
+            var devices = ADB.DetectDevices();
+            int count = devices.Count;
+    
+            for (int i = 0; i < count; i++)
+            {
+                Console.WriteLine($"Current device: {devices[i].SerialNumber}");
+            }
+    
+            if (count == 0)
+                throw new Exception("ADB DEVICES NOT FOUND");
+    
+            // Test serial detection
+            ADB adb = new ADB(devices[0].SerialNumber);
+    
+            // Exit msg
+            PauseMsg("\n\nPress Enter to exit");
         }
-
-        if (count == 0)
-            throw new Exception("ADB DEVICES NOT FOUND");
-
-        // Test serial detection
-        ADB adb = new ADB(devices[0].SerialNumber);
-
-        // Exit msg
-        PauseMsg("\n\nPress Enter to exit");
+    
+        static void PauseMsg(string msg)
+        {
+            Console.WriteLine(msg);
+            Console.ReadKey();
+        }
     }
 
-    static void PauseMsg(string msg)
-    {
-        Console.WriteLine(msg);
-        Console.ReadKey();
-    }
-}
 For more detailed examples and advanced usage, please refer to the Wiki (coming soon!) or the Samples directory in the repository.
 
 🤝 Contributing
