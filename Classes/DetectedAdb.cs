@@ -4,13 +4,15 @@
     {
         // Attributes
         public string SerialNumber { get; set; }
-        public string Mode { get; set; }
+        public ADB.ADBModes Mode { get; set; }
+        public bool IsReady { get; set; }
 
         // Constructor
-        public DetectedAdb(string sn, string mode)
+        public DetectedAdb(string sn, ADB.ADBModes mode, bool isReady)
         {
             this.SerialNumber = sn;
             this.Mode = mode;
+            IsReady = isReady;
         }
     }
 }
