@@ -1,120 +1,153 @@
-ADBueno: Your New Favorite ADB Library for C#
+# ADBueno: Your New Favorite ADB Library for C#
 
 ADBueno is a powerful and comprehensive C# library designed to simplify your interactions with Android Debug Bridge (ADB). Whether you're a developer, tester, or automation engineer, ADBueno provides a robust and easy-to-use set of functionalities to streamline your Android device management and testing workflows.
 
-📺 Development Journey
+📺 **Development Journey**  
+Want to see how ADBueno came to life? Check out the development process on my YouTube channel:  
+[Watch the development series here!](https://www.youtube.com/watch?v=Fawe9lNzrJ4)
 
-Want to see how ADBueno came to life? Check out the development process on my YouTube channel:
-[Watch the development series here!]([https://www.youtube.com/watch?v=YOUR_YOUTUBE_VIDEO_ID](https://youtu.be/Fawe9lNzrJ4))
+---
 
+## ✨ Features
 
-✨ Features
-ADBueno empowers you with a wide array of ADB functionalities, including:
+### 🔌 Device Management
+- Detect single or multiple connected ADB devices (including unauthorized/offline).
+- Connect to devices via specific serials or universally.
+- Detect specific device modes and boot completion.
+- Reboot into normal, bootloader, recovery, or custom modes.
+- Reboot and wait for device readiness.
+- Connect/disconnect to emulators or hidden devices via ADB CONNECT.
+- Start/Stop ADB server.
+- Change ADB executable location dynamically.
 
-    Device Management:
-    
-        Detect single or multiple connected ADB devices.
-        Connect to devices via specific serials or universally.
-        Quickly detect device presence.
-        Detect specific device modes.
-        Check for boot completion.
-        Reboot devices into various modes (e.g., normal, bootloader, recovery).
-        Reboot and wait for device to come online.
-        Detect and wait for device to be ready.
-        Connect to emulators or hidden devices via ADB CONNECT.
-    
-    Property & Shell Interactions:
-    
-        Get and set device properties (GETPROP / SETPROP).    
-        Run arbitrary shell commands on the device.
-        Check root information and run root shell commands.
-        Set root mode.
-    
-    File & Package Operations:
-    
-        Pull and push files to/from the device.
-        List internal files and directories.
-        Check if a file or folder exists on the device.
-        Remove files.
-        Change file permissions.
-        Install and uninstall APKs.
-        List installed APKs.
-        Disable and enable packages.
-        
-    Logging & Advanced Tools:
-    
-        Capture device logcat output.
-        Filter logcat output for specific tags or keywords.
-        Execute DD commands (requires root).
-        List GPT partitions (requires root).
+### 🧠 Device Info & Properties
+- Read all Android properties (`UpdateProps`).
+- Get main device information (`GetDeviceInfo`).
+- Use predefined constants for common `getprop` keys (`ADB_PROPS`).
+- New `Str` utility class for string operations.
 
-🚀 Getting Started
+### 🗂️ File System Operations
+- Push, pull, copy, move, and remove files or folders.
+- Create files and directories (`FSCreate`).
+- Check file/folder existence and size (`FSGetSize`).
+- Change permissions recursively (`FSChmod`).
+- Clear folder contents (`FSClearFolder`).
+- Read file contents (`FSCat`), zerout files (`FSZerout`), and run scripts (`RunScript`).
+- Improved `FSRemove`, `FSPush`, `FSPull`, and `FSList` with additional path outputs.
 
-Installation
+### 📦 APK & Package Management
+- Install, uninstall, and list APKs (`APKList`).
+- Get APK installation path (`APKPath`).
+- Check APK-related data files (`APKData`).
+- Enable/disable packages.
+- New `PackageManager`:
+  - Clear app data, dump info, hide/unhide apps.
+  - Grant/revoke permissions.
+  - Manage users.
 
-ADBueno is available as a NuGet package. You can install it via the NuGet Package Manager in Visual Studio or using the .NET CLI:
+### 🧰 Advanced Tools
+- Capture and filter logcat output.
+- Execute `dd` commands (root).
+- List GPT partitions (`GPTList`) and manage them with `GPTManager`:
+  - Find, mount, zerout, dump, and write partitions.
 
-Bash
+### 📺 Screen
+- Get screen resolution (`GetScreenSize`, `ScreenSize`).
+- Capture screenshots (`ScreenCapture`).
+- Record screen with custom resolution and bitrate (`ScreenRecording`).
 
-    dotnet add package ADBueno
-    
-Basic Usage
+### ⚙️ System Settings
+- `SettingsManager` for system, global, and secure settings:
+  - List, read, write, and delete settings.
 
-Here's a quick example to get you started:
+### ⌨️ Control your device
+- `InputManager`:
+  - Screen Tap.
+  - Send word or whole sentence.
+  - Simulate keyboard key stroke. (Enter, Arrow, Back, Home, Numbers, Letters, etc)
+  - Simulate touch swipe.
+  - Drag and drop.
 
-    C#
-    
-    using ADBueno;
-    using System;
-    
-    internal class Program
+### 🧠 Activity Management
+- `ActivityManager`:
+  - List, start, stop, and kill activities.
+  - Start/stop services and send broadcasts.
+
+### 🧱 Partition Management
+- New `Partition` class for GPT handling.
+- `RemoveFRP` function for factory reset protection removal.
+
+### 🧪 Utilities & Debugging
+- Custom debugging event system (`UpdateAux`).
+- Improved root detection and shell command execution.
+- New `ADBException` class for structured error handling.
+- IDisposable support for `ADB` object cleanup.
+- Organized codebase using C# regions for better readability.
+
+---
+
+## 🚀 Getting Started
+
+### Installation
+
+Install via NuGet:
+
+```bash
+dotnet add package ADBueno
+```
+
+### Basic Usage
+
+```csharp
+using ADBueno;
+using System;
+
+internal class Program
+{
+    static void Main(string[] args)
     {
-        static void Main(string[] args)
+        var devices = ADB.DetectDevices();
+        int count = devices.Count;
+
+        for (int i = 0; i < count; i++)
         {
-            // Detect devices
-            var devices = ADB.DetectDevices();
-            int count = devices.Count;
-    
-            for (int i = 0; i < count; i++)
-            {
-                Console.WriteLine($"Current device: {devices[i].SerialNumber}");
-            }
-    
-            if (count == 0)
-                throw new Exception("ADB DEVICES NOT FOUND");
-    
-            // Test serial detection
-            ADB adb = new ADB(devices[0].SerialNumber);
-    
-            // Exit msg
-            PauseMsg("\n\nPress Enter to exit");
+            Console.WriteLine($"Current device: {devices[i].SerialNumber}");
         }
-    
-        static void PauseMsg(string msg)
-        {
-            Console.WriteLine(msg);
-            Console.ReadKey();
-        }
+
+        if (count == 0)
+            throw new Exception("ADB DEVICES NOT FOUND");
+
+        ADB adb = new ADB(devices[0].SerialNumber);
+
+        PauseMsg("\n\nPress Enter to exit");
     }
 
-For more detailed examples and advanced usage, please refer to the Wiki (coming soon!) or the Samples directory in the repository.
+    static void PauseMsg(string msg)
+    {
+        Console.WriteLine(msg);
+        Console.ReadKey();
+    }
+}
+```
 
-🤝 Contributing
-We welcome contributions! If you have suggestions for improvements, new features, or find any bugs, please open an issue or submit a pull request.
+More examples coming soon in the Wiki and Samples directory!
 
-📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+---
 
-udos Acknowledgments
+## 🤝 Contributing
 
-    Inspired by the need for a robust and user-friendly ADB library in C#.
-    Thanks to the open-source community for their invaluable resources and tools.
+We welcome contributions! If you have suggestions, bug reports, or feature ideas, feel free to open an issue or submit a pull request.
 
-Enjoy building amazing Android tools with ADBueno!
+---
 
-Remember to replace:
+## 📄 License
 
-    YourUsername/ADBueno with your actual GitHub repository path for the license badge and potential wiki link.
-    Create a CONTRIBUTING.md and a LICENSE file in your repository.
-    Consider creating a Samples directory with more elaborate code examples.
-    Eventually, create a Wiki for more in-depth documentation.
+This project is licensed under the MIT License – see the LICENSE file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- Inspired by the need for a robust and user-friendly ADB library in C#.
+- Thanks to the open-source community for their invaluable tools and documentation.
+```
